@@ -1,6 +1,8 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 
 public static class TimeChecker
 {
@@ -9,22 +11,45 @@ public static class TimeChecker
         TimeZoneInfo est = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
         DateTime currentTimeEst = TimeZoneInfo.ConvertTime(DateTime.Now, est);
 
-        if (currentTimeEst.Hour == 5 && currentTimeEst.Minute == 0)
+        if (currentTimeEst.Hour == 13 && currentTimeEst.Minute == 9)
         {
             DoSomething();
-            Thread.Sleep(60000);
+            Thread.Sleep(7000000);
         }
     }
 
     public static void DoSomething()
     {
         Console.WriteLine("It's 5 AM EST!");
-        string url = "https://play.max.com/video/watch/6e753253-9b38-4e02-a86c-b691b4d51f33/ddfe9a93-16d2-4233-b3a1-36ac18b9b795";
-        Process.Start(new ProcessStartInfo
+        string url = "https://auth.max.com/login";
+        // Process.Start(new ProcessStartInfo
+        // {
+        //     FileName = url,
+        //     UseShellExecute = true
+        // });
+        using (var browser = new ChromeDriver())
         {
-            FileName = url,
-            UseShellExecute = true
-        });
+            browser.Navigate().GoToUrl(url);
+            // Wait for the page to load and elements to be present
+            EnterUsername(browser, "vothanhdat278@gmail.com");
+            Thread.Sleep(5000000);
+        }
+    }
+
+    public static void EnterUsername(IWebDriver driver, string username)
+    {
+        try
+        {
+            // Find the input field by its id and enter the username
+            Thread.Sleep(19000);
+            Console.WriteLine("enteringggg");
+            var usernameInput = driver.FindElement(By.Name("username"));
+            usernameInput.SendKeys(username);
+        }
+        catch (NoSuchElementException)
+        {
+            Console.WriteLine("Username input field not found.");
+        }
     }
 }
 
